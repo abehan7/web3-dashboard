@@ -18,17 +18,16 @@ const Card = ({ name, symbol, token_id, metadata }) => {
   const isMp4 = ipfsSrc?.includes(".mp4" || ".gif");
   const isImg = ipfsSrc?.includes(".png" || ".jpg" || ".jpeg");
   return (
-    <div className=" h-[10rem] rounded-lg bg-slate-400  cursor-pointer">
+    <div className="  rounded-lg bg-slate-400  cursor-pointer">
       {!isMp4 && (
-        <div className="rounded-xl">
+        <div className="rounded-xl h-[10rem]">
           <AutoHeightImage imgSrc={ipfsSrc} />
         </div>
       )}
       {isMp4 && (
-        <video
-          src={ipfsSrc}
-          className="rounded-xl cover max-h-[10rem] flex items-center justify-center"
-        />
+        <div className="flex items-center justify-center h-[10rem] max-h-[10rem] overflow-hidden rounded-xl">
+          <video src={ipfsSrc} className="rounded-xl cover" />
+        </div>
       )}
       <div>
         {name} #{token_id}
@@ -51,6 +50,14 @@ export default function Home() {
       token_uri: "https://ipfs.moralis.io:2053/ipfs/QmfAnC1z",
     },
   ]);
+
+  const [transferOption, setTransferOption] = useState({
+    type: "erc721",
+    receiver: "0x..",
+    contractAddress: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+    tokenId: 1,
+  });
+
   const { fetch, error, isFetching } = useWeb3Transfer({
     type: "erc721",
     receiver: "0x..",
