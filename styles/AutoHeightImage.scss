@@ -1,0 +1,46 @@
+.autoImage__wrapper {
+  width: 100%;
+  background: #ffe4d9;
+  & > span {
+    position: unset !important;
+    animation: flash 0.5s linear;
+    border-radius: 0.5rem;
+
+    & .autoImage {
+      object-fit: cover !important;
+      position: relative !important;
+      height: auto !important;
+      animation: flash 0.5s linear;
+    }
+  }
+  img {
+    animation: flash 0.5s linear;
+  }
+}
+.flash {
+  animation: flash 0.5s linear;
+}
+
+@keyframes flash {
+  0% {
+    opacity: 0;
+  }
+  5% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 0;
+  }
+  60% {
+    opacity: 0.3;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
