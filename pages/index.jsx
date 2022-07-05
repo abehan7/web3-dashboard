@@ -156,7 +156,7 @@ export default function Home() {
       <div className="h-[8rem] flex items-center justify-center flex-col cursor-pointer">
         <div>{user?.get("ethAddress")}</div>
         <div onClick={login}>log in</div>
-        <button>approve for all</button>
+        {/* <button>approve for all</button> */}
       </div>
       <div
         className="grid grid-cols-5 w-[80%] gap-4 items-center justify-center"
