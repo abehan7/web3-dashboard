@@ -40,7 +40,14 @@ const Card = ({
       )}
       {isMp4 && (
         <div className="flex items-center justify-center h-[10rem] max-h-[10rem] overflow-hidden rounded-xl">
-          <video src={ipfsSrc} className="rounded-xl cover" />
+          <video
+            src={ipfsSrc}
+            className="rounded-xl cover"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
         </div>
       )}
       <div>
