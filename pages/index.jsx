@@ -1,24 +1,26 @@
-import { useEffect, useState } from "react";
-import { useWeb3Transfer } from "react-moralis";
-import { useMoralisWeb3Api } from "react-moralis";
+import { useCallback, useEffect, useState } from "react";
+import { useMoralis, useWeb3Transfer, useMoralisWeb3Api } from "react-moralis";
 import AutoHeightImage from "../components/common/AutoHeightImage";
+import { ITokenList, ITransferOption } from "../objects";
 
 const baseURI = "https://ipfs.io/ipfs/";
+
 const getIPFS = (uri) => {
   if (!uri) return null;
   const _ipfs = baseURI + uri?.split("/ipfs/")[1];
-  console.log("_ipfs", _ipfs);
   return _ipfs;
 };
-const Card = ({ name, symbol, token_id, metadata }) => {
+
+const Card = ({ name, symbol, token_id, metadata, onClick }) => {
   // https://ipfs.io/ipfs/
+
   const imageSrc = metadata?.image;
   const ipfsSrc = getIPFS(imageSrc);
   // console.log("ipfsSrc", ipfsSrc);
   const isMp4 = ipfsSrc?.includes(".mp4" || ".gif");
   const isImg = ipfsSrc?.includes(".png" || ".jpg" || ".jpeg");
   return (
-    <div className="  rounded-lg bg-slate-400  cursor-pointer">
+    <div className="  rounded-lg bg-white  cursor-pointer">
       {!isMp4 && (
         <div className="rounded-xl h-[10rem]">
           <AutoHeightImage imgSrc={ipfsSrc} />
@@ -32,39 +34,23 @@ const Card = ({ name, symbol, token_id, metadata }) => {
       <div>
         {name} #{token_id}
       </div>
+      <div className="flex items-center justify-center max-w-[10rem]">
+        <input className="max-w-[10rem] border" />
+      </div>
+      <div onClick={onClick}>send</div>
     </div>
   );
 };
 
 export default function Home() {
-  const [tokenList, setTokenList] = useState([
-    {
-      amount: "1",
-      metadata: "",
-      name: "ggg",
-      owner_of: "0x45e3ca56946e0ee4bf36e893cc4fbb96a1523212",
-      symbol: "ggg",
-      token_address: "0xbbd9a15d16598ec32f5f8b23b082088f49773f3e",
-      token_hash: "f25ac3055e9e250f4b252dbc22b914ae",
-      token_id: "77",
-      token_uri: "https://ipfs.moralis.io:2053/ipfs/QmfAnC1z",
-    },
-  ]);
+  const [tokenList, setTokenList] = useState(ITokenList);
 
-  const [transferOption, setTransferOption] = useState({
-    type: "erc721",
-    receiver: "0x..",
-    contractAddress: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-    tokenId: 1,
-  });
+  const [transferOption, setTransferOption] = useState(ITransferOption);
 
-  const { fetch, error, isFetching } = useWeb3Transfer({
-    type: "erc721",
-    receiver: "0x..",
-    contractAddress: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-    tokenId: 1,
-  });
+  const { fetch, error, isFetching } = useWeb3Transfer(transferOption);
   // Moralis.start()
+  const { authenticate, isAuthenticated, user } = useMoralis();
+
   const Web3Api = useMoralisWeb3Api();
 
   const fetchNFTs = async () => {
@@ -89,6 +75,31 @@ export default function Home() {
     }
   };
 
+  const handleClickSendNFT = async () => {
+    if (!Web3Api) return;
+    try {
+      // const { to, token_id } = transferOption;
+      // "0x81726B547537b7f9F7322a590574681AA43E283C"
+      const res = await fetch();
+      console.log(res);
+      console.log(error, isFetching);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const login = async () => {
+    if (!isAuthenticated) {
+      await authenticate()
+        .then(function (user) {
+          console.log(user?.get("ethAddress"));
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  };
+
   useEffect(() => {
     fetchNFTs();
   }, []);
@@ -96,6 +107,8 @@ export default function Home() {
   useEffect(() => {
     console.log(tokenList);
   }, [tokenList]);
+
+  // console.log(user);
   // const arr = Array.from({ length: 10 }, (_, i) => i);
   const cards = tokenList.map((token) => (
     <Card
@@ -105,12 +118,15 @@ export default function Home() {
       token_id={token.token_id}
       symbol={token.symbol}
       metadata={token.metadata}
+      onClick={handleClickSendNFT}
     />
   ));
 
   return (
     <div className="w-full min-h-screen bg-slate-100 flex items-center justify-start flex-col gap-10">
-      <div className="h-[8rem] flex items-center justify-center">
+      <div className="h-[8rem] flex items-center justify-center flex-col cursor-pointer">
+        <div></div>
+        <div onClick={login}>log in</div>
         <button>approve for all</button>
       </div>
       <div

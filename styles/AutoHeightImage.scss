@@ -1,9 +1,8 @@
 // set variable for image color
-$bg-color: rgba(148 163 184, 1);
 
 .autoImage__wrapper {
   width: 100%;
-  background: $bg-color;
+  background: #fff;
   & > span {
     position: unset !important;
     animation: flash 0.5s linear;
